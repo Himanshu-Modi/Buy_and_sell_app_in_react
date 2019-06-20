@@ -1,0 +1,21 @@
+.img1{
+    width: 280px;
+   
+  }
+  
+
+  .branch{
+    position: absolute;
+  }
+  .interasted{
+    text-align: center !important;
+  }
+  .label{
+    height: 30px;
+  }
+
+  .imagwwali{
+    display: block;
+    margin: auto;
+    width: 55%;
+  }

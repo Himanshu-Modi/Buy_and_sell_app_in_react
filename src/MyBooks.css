@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap');
+
+.MyBooksbg{
+    background-image: linear-gradient(to right,#C6FFDD,#FBD786);
+}
+.mainHeading{
+    padding: 1%;
+    background-image: linear-gradient(to right,#DA4453,#89216B);
+}
+.myBooksHeading{
+    font-family: 'Pacifico', cursive;
+    color:white;
+   
+}
