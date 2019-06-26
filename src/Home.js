@@ -4,7 +4,7 @@ import {List,Grid,Header,Segment,Container} from 'semantic-ui-react';
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 import {  Link } from "react-router-dom";
-function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshowsignup,googleLogin}) {
+function Home({model1show,showlogin,model2show,showsignup,googleLogin,handleChange,signup,signin}) {
   return(
     <div>
     <Navbar bg="dark" variant="dark">
@@ -32,7 +32,7 @@ function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshow
 
         <Modal
         show={model1show}
-        onHide={dontshowlogin}
+        onHide={showlogin}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -45,8 +45,8 @@ function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshow
         <Modal.Body>
         <Form>
   <Form.Group controlId="formBasicEmail">
-    <Form.Label>Email address</Form.Label>
-    <Form.Control type="email" placeholder="Enter email" />
+    <Form.Label>Email address  </Form.Label>
+    <Form.Control  onChange={handleChange} name="email" type="email" placeholder="Enter email" />
     <Form.Text className="text-muted">
       We'll never share your email with anyone else.
     </Form.Text>
@@ -54,18 +54,18 @@ function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshow
 
   <Form.Group controlId="formBasicPassword">
     <Form.Label>Password</Form.Label>
-    <Form.Control type="password" placeholder="Password" />
+    <Form.Control onChange={handleChange} name="password" type="password" placeholder="Password" />
   </Form.Group>
-  <Link to="/books/all">
-  <Button variant="primary" type="submit">
+ 
+  <Button variant="primary"  onClick={()=>{signin()}}>
   
     Submit
    
   </Button>
-  </Link>
+
   <br />
   <br />
-  <Button variant="warning" onClick={()=>{googleLogin()}} >Login With Google</Button>
+  <Button variant="warning" onClick={googleLogin} >Login With Google</Button>
 </Form>
         </Modal.Body>
       </Modal>
@@ -84,7 +84,7 @@ function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshow
 
         <Modal
         show={model2show}
-        onHide={dontshowsignup}
+        onHide={showsignup}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -96,24 +96,32 @@ function Home({model1show,showlogin,dontshowlogin,model2show,showsignup,dontshow
         </Modal.Header>
         <Modal.Body>
         <Form>
-    <Form.Group controlId="formBasicEmail">
- 
- 
-  </Form.Group>
+
   <Form.Group controlId="formBasicEmail">
-    <Form.Label onChange={handleemailChange}>Email address</Form.Label>
-    <Form.Control type="email" placeholder="Enter email" />
+    <Form.Label >User Name</Form.Label>
+    <Form.Control onChange={handleChange} name="name" type="text" placeholder="Enter Name" />
+  </Form.Group>
+
+  
+  <Form.Group controlId="formBasicEmail">
+    <Form.Label >Email address</Form.Label>
+    <Form.Control onChange={handleChange} name="email" type="email" placeholder="Enter email" />
   </Form.Group>
 
   <Form.Group controlId="formBasicPassword">
-    <Form.Label>Password</Form.Label>
-    <Form.Control type="password" placeholder="Password" />
+    <Form.Label >Password</Form.Label>
+    <Form.Control onChange={handleChange} name="password" type="password" placeholder="Password" />
   </Form.Group>
- 
-  <Button variant="primary" type="submit">
+
+  <Form.Group controlId="formBasicPassword">
+    <Form.Label >Phone number</Form.Label>
+    <Form.Control onChange={handleChange}type="text" name="phone" placeholder="Password" />
+  </Form.Group>
+  </Form>
+  <Button  onClick={()=>{signup()}}  variant="primary" >
     Submit
   </Button>
-</Form>
+
         </Modal.Body>
       </Modal>
 

@@ -6,26 +6,30 @@ import 'semantic-ui-css/semantic.min.css';
 import './MainActivity.css';
 import FormExampleSubcomponentControl from './FilterComponent';
 import MainNavBar from './MainNavBar';
+import Bookdescription from './bookdescription';
 
 
-const CardExampleCard = (props) => (
+function CardExampleCard(props){
+
+
+return  (
   <Card  raised color="green" className="BooksContainer">
-  <Image  className="Bookimage" src={props.type.image} wrapped-ui={true}  centered />
+  <Image  className="Bookimage" src={props.type.bookurl} wrapped-ui={true}  centered />
     <Card.Content>
-      <Card.Header>{props.type.name}</Card.Header>
+      <Card.Header>{props.type.bookname}</Card.Header>
       <Card.Meta>
-        <span className=''>Available in  only <h4><Icon name="rupee sign" ></Icon> {props.type.price} /- </h4></span>
+        <span className=''>Available in  only <h4><Icon name="rupee sign" ></Icon> {props.type.sellingprice} /- </h4></span>
       </Card.Meta>
     
-   <Link to="/bookdescription">
-      <Button primary size='large' fluid  animated='vertical'>
+      
+      <Button onClick={()=>{props.getseller(props.type.uid,props.type._id)}} primary size='large' fluid  animated='vertical'>
         
       <Button.Content hidden>See Details</Button.Content>
       <Button.Content visible>
         <Icon name='shop' />
       </Button.Content>
     </Button>
-    </Link>
+   
       
     </Card.Content>
   
@@ -33,7 +37,7 @@ const CardExampleCard = (props) => (
   
   
 )
-
+}
 
 function ShowBooks(props){
   console.log("show Books");
@@ -43,7 +47,7 @@ function ShowBooks(props){
   return ( <Card.Group itemsPerRow={4}> 
     {db.map((item) =>(
 
-      <CardExampleCard type={item} />
+      <CardExampleCard type={item} getseller={props.getseller}  />
      
     ))
     }
@@ -53,20 +57,21 @@ function ShowBooks(props){
   
   
 
-function MainPage(props){
+function MainPage({logout,username,getseller,books,bookdescription,handleselect,bookfilter,uid}){
+ 
  return (
     <div>
         <div>
-          <MainNavBar></MainNavBar>
+          <MainNavBar logout={logout} username={username}></MainNavBar>
         </div>
 
    
 <div className="FilterClass">
-<FormExampleSubcomponentControl></FormExampleSubcomponentControl>
+<FormExampleSubcomponentControl handleselect={handleselect} bookfilter={bookfilter}></FormExampleSubcomponentControl>
   </div>
   
     <div> 
-<ShowBooks books={props.books}></ShowBooks>   
+<ShowBooks books={books} bookdescription={bookdescription} getseller={getseller} ></ShowBooks>   
 </div>
 
          

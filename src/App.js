@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router,Link, Route } from "react-router-dom";
+import { BrowserRouter as Router,Link, Route,withRouter } from "react-router-dom";
 import { Navbar, Nav,Form,Button,ButtonGroup,Carousel,Modal,Row,Col} from '../node_modules/react-bootstrap';
 import './App.css';
 import Home from './Home';
@@ -30,88 +30,233 @@ firebase.initializeApp(firebaseConfig);
 class App extends React.Component{
   constructor(props){
     super(props)
-     this.state= {model1show:false,model2show:false}
+     this.state= {model1show:false,model2show:false,name:"",email:"",password:"",phone:"",uid:"",bookname:"",branch:"",semester:"",sellingprice:0,MRP:0,bookurl:"",sellername:"",sellerphone:"",sellerid:"",filterbranch:"",filtersemester:""}
      this.state.db = {
-     books:[],
-     user:{email:"",password:""}
+     books:[],   
      }    
 
   }
   
   showlogin(){
-    console.log("show hua h");
+    let model1show=this.state.model1show;
+    model1show=!model1show;
     this.setState(
       {
-        model1show:true
+        model1show:model1show
       }
   
     )
   }
 
 
-dontshowlogin(){
-  this.setState(
-    {
-      model1show:false
-    }
 
-  )
-}
+
 showsignup(){
-  console.log("show hua h");
+  let model2show=this.state.model2show;
+  model2show=!model2show;
   this.setState(
     {
-      model2show:true
-    }
-
-  )
-}
-dontshowsignup(){
-  this.setState(
-    {
-      model2show:false
+      model2show:model2show
     }
 
   )
 }
 
 
-handleemailChange(event){
-  let user=user;
-  user.email=event.target.value;
-  this.setState({
-    user:user
+
+
+handleChange(evt){ 
+ this.setState({ [evt.target.name]: evt.target.value });
+}
+
+handleselect(type,value){
+if (type=="branch"){
+    this.setState({
+      branch:value
+    })
+  }
+  if (type=="semester"){
+    this.setState(
+      {
+        semester:value
+      }
+    )
+  }
+  if(type=="filterbranch"){
+    
+    this.setState({
+      filterbranch:value
+    })
+  }
+  if (type=="filtersemester"){
+this.setState({
+  filtersemester:value
+})
+
+  }
+  
+
+
+
+  }
+  
+
+
+handlephoneChange(evt){
+  var len= evt.target.value.length;
+  if (len<=10){
+  
+   this.setState({
+    phone:evt.target.value
   })
 }
-
-handlepasswordChange(event){
-    let user=user;
-    user.password=event.target.value;
-    this.setState({
-      user:user
-    })
-
+  
 }
 
-signup(){
-firebase.auth().createUserWithEmailAndPassword(this.state.user.email,this.state.user.password).catch(function(error) {
+fileUpload(e){
+  console.log(e.target.files[0])
+ let fd = new FormData()
+ fd.append("avatar",e.target.files[0])
+
+  axios.post("http://localhost:8080/image",fd,{headers:{
+   'Content-Type': "multipart/form-data"
+ }})
+ }
+
+
+
+checkuser=()=>{
+  firebase.auth().onAuthStateChanged((user) =>{
+    if (user) {
+       var email=user.email;
+      this.setState({
+        email:email
+      })
+      this.storeuserdata();
+      this.books();
+    
+     this.props.history.push('/books/all'); 
+
+
+    } else {
+      // No user is signed in.
+     
+      this.props.history.push("/");
+    }
+
+  });
+  
+}
+
+logout=()=>{
+ 
+  firebase.auth().signOut().then(()=> {
+  this.props.history.push("/");
+  }).catch(function(error) {
+  // An error happened.
+  });
+}
+
+
+signup(){  
+  firebase.auth().createUserWithEmailAndPassword(this.state.email,this.state.password).then(()=> {
+  
+    }).catch(function(error) {
   // Handle Errors here.
   var errorCode = error.code;
   var errorMessage = error.message;
+  
   // ...
 });
 }
 
-googleLogin(){
-  var provider = new firebase.auth.GoogleAuthProvider();
-  console.log(provider);
-
-  firebase.auth().signInWithPopup(provider).then(function(result) {
+signin(){
+ 
+  firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((result)=> {
     // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = result.credential.accessToken;
-    // The signed-in user info.
+  
+    this.props.history.push('/books/all');
+    // ...
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    console.log(errorCode);
+    
+    var errorMessage = error.message;
+    // ...
+  });
+}
+
+storeuserdata=()=>{
+let obj={name:this.state.name,email:this.state.email,phone:this.state.phone};
+axios.post('http://localhost:8080/user',obj)
+.then((res)=>{
+  this.setState(
+    {
+      name:res.data.name,
+      email:res.data.email,
+      uid:res.data._id,
+      phone:res.data.phone
+    }
+  )
+})
+}
+
+
+getseller=(uid,sid)=>{
+  console.log(uid);
+  axios.get("http://localhost:8080/seller/"+uid).then(
+    (res)=>{
+     
+    
+      this.setState({
+        sellername:res.data.name,
+        sellerphone:res.data.phone
+
+      })
+
+   
+      this.props.history.push("/bookdescription/"+sid);
+
+    }
+    
+  )
+
+
+}
+
+savebook=()=>{
+  let obj={branch:this.state.branch,semester:this.state.semester,bookname:this.state.bookname,bookurl:this.state.bookurl,sellingprice:this.state.sellingprice,MRP:this.state.MRP,uid:this.state.uid};
+axios.post("http://localhost:8080/savebook",obj).then((res)=>{
+  this.books();
+  this.props.history.push("/books/all")
+})
+
+}
+
+
+updateuser=()=>{
+  let obj={uid:this.state.uid,name:this.state.name,email:this.state.email,phone:this.state.phone};
+  axios.put('http://localhost:8080/updateuser',obj).then((res=>{console.log(res)}))
+
+}
+
+googleLogin=()=>{
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  firebase.auth().signInWithPopup(provider).then((result)=> {
+    // This gives you a Google Access Token. You can use it to access the Google API.
     var user = result.user;
-    console.log(user.displayName,user.email);
+    this.setState({
+      name:user.displayName
+    })
+    this.setState({
+      email:user.email
+    })
+  
+
+    this.props.history.push('/books/all');
+   
     // ...
   }).catch(function(error) {
     console.log(error);
@@ -130,35 +275,59 @@ googleLogin(){
   });
 }
 
-  componentDidMount(){
-  
-    axios.get('http://5cfe5a23cas949b00148d3ff2.mockapi.io/products')
-    .then((res)=>{
-      
-    let db = this.state.db;
-    db.books = res.data;
-      this.setState({
-         db:db
-      })
+bookfilter=()=>{
+
+  let obj={branch:this.state.filterbranch,semester:this.state.filtersemester};
+  console.log(obj);
+  axios.post("http://localhost:8080/bookfind",obj).then((res)=>{
+    
+  let db = this.state.db;
+  db.books = res.data;
+  console.log(res.data);
+    this.setState({
+       db:db
     })
+  })
+  
+}
+
+books=()=>{
+  axios.get('http://localhost:8080/book')
+  .then((res)=>{
+    
+  let db = this.state.db;
+  db.books = res.data;
+  console.log(res.data);
+    this.setState({
+       db:db
+    })
+  })
+ 
+}
+
+  componentDidMount(){
+    this.checkuser();   
 
 }
+
+
 
  render(){
+
     return (<div>
-       <Router>
-          <Route path="/" exact render={()=><Home model1show={this.state.model1show} showlogin={this.showlogin.bind(this)} dontshowlogin={this.dontshowlogin.bind(this)}  model2show={this.state.model2show} showsignup={this.showsignup.bind(this)} dontshowsignup={this.dontshowsignup.bind(this)} googleLogin={this.googleLogin.bind(this)} handleemailChange={this.handleemailChange.bind(this)}></Home>} />
-          <Route path="/books/all" exact render={()=><MainPage books={this.state.db.books}></MainPage>} />
-          <Route path="/sellbook" component={SellBook} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/bookdescription" component={Bookdescription} />
-          <Route path="/mybooks" component={MyBooks} />
-       </Router>
+     
+          <Route path="/" exact render={()=><Home model1show={this.state.model1show} showlogin={this.showlogin.bind(this)}   model2show={this.state.model2show} showsignup={this.showsignup.bind(this)} googleLogin={this.googleLogin}  handleChange={this.handleChange.bind(this)}  signup={this.signup.bind(this)} signin={this.signin.bind(this)} ></Home>} />
+          <Route path="/books/all" exact render={()=><MainPage logout ={this.logout}  uid={this.state.uid}  username={this.state.name} getseller={this.getseller}   books={this.state.db.books} bookdescription={this.bookdescription}  handleselect={this.handleselect.bind(this)} bookfilter={this.bookfilter} ></MainPage>} />
+          <Route path="/sellbook" exact render={()=><SellBook    logout ={this.logout} uid={this.state.uid}  username={this.state.name} handleChange={this.handleChange.bind(this)}  handleselect={this.handleselect.bind(this)} savebook={this.savebook} ></SellBook> }/>
+          <Route path="/profile"  exact render={()=><Profile   logout ={this.logout} uid={this.state.uid}  username={this.state.name} phone={this.state.phone} handleChange={this.handleChange.bind(this)}   handlephoneChange={this.handlephoneChange.bind(this)} updateuser={this.updateuser} ></Profile> } />
+          <Route path="/bookdescription/:id" exact render={(props)=><Bookdescription  {...props}  logout ={this.logout} uid={this.state.uid}  username={this.state.name}   books={this.state.db.books} sellername={this.state.sellername} sellerphone={this.state.sellerphone} ></Bookdescription> }/>
+          <Route path="/mybooks/:id" exact render={()=><MyBooks   logout ={this.logout} uid={this.state.uid}  username={this.state.name} ></MyBooks> }/>
+       
        </div>
        );
-  }
+    }
  
  
 
 }
-export default App;
+export default withRouter(App);

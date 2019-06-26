@@ -2,17 +2,9 @@ import React from 'react';
 import { Form, Icon, Image, Button, Divider, Header, Grid } from 'semantic-ui-react'
 import MainNavBar from './MainNavBar';
 
-class Profile extends React.Component {
-    constructor(...props) {
-        super(...props)
-        this.state = {}
-
-    }
-
-
-    render() {
+function Profile ({logout,username,phone,handleChange,handlephoneChange,updateuser}){
         return (<div>
-            <MainNavBar></MainNavBar>
+            <MainNavBar  logout={logout} username={username}></MainNavBar>
             <Divider horizontal>
                 <Header as='h4'>
                     <Icon name='user' />
@@ -32,8 +24,12 @@ class Profile extends React.Component {
         </Grid.Column>
           <Grid.Column width={6} centerd >
         <Form className='attached fluid '>
-        <Form.Input label='User Name' type='text'  />
-      <Form.Input label='Contact No' type='text'  />
+         
+       
+
+        <Form.Input name="name" value={username} onChange={handleChange} label='User Name' type='text'  />
+      <Form.Input  value={phone}  onChange={handlephoneChange} label='Contact No' type='text'  />
+      <Button primary onClick={updateuser} >Save Changes</Button>
       <Header size='large'>Change Password:</Header>
 
       <Form.Group widths='equal'>
@@ -58,5 +54,5 @@ class Profile extends React.Component {
     }
 
 
-}
+
 export default Profile;

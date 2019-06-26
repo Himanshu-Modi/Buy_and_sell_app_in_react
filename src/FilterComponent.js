@@ -1,23 +1,17 @@
 import React from 'react';
 import { Form ,Icon} from 'semantic-ui-react'
 
-class FormExampleSubcomponentControl extends React.Component {
-  state = {}
-
-  handleChange = (e, { value }) => this.setState({ value })
-
-  render() {
-  
+function FormExampleSubcomponentControl(props) { 
     return (
       <Form >
         <Form.Group>
        
-          <Form.Select fluid options={BranchOptions} placeholder='Select Branch' width={7} />
-          <Form.Select fluid  options={SemesterOptions} placeholder='Select Semester' width={7}/>
-           <Form.Button color={"blue"} width={3} fluid >  <Icon name='search' fluid  />Search</Form.Button>
+          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filterbranch",value)}  options={BranchOptions} placeholder='Select Branch' width={7} />
+          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filtersemester",value)}   options={SemesterOptions} placeholder='Select Semester' width={7}/>
+           <Form.Button color={"blue"} width={3} fluid onClick={props.bookfilter} >  <Icon name='search' fluid  />Search</Form.Button>
         </Form.Group>
     </Form>); 
-  }
+
 }
 const BranchOptions=[
   {key: 'Computer Science Enginerring',

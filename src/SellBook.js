@@ -4,9 +4,9 @@ import {  Button, Icon,Image,Grid,Form,Header ,Select,Divider} from 'semantic-ui
 import 'semantic-ui-css/semantic.min.css';
 import MainNavBar from './MainNavBar';
 const BranchOptions=[
-  {key: 'Computer Science Enginerring',
+  {
   text: 'Computer Science Enginerring',
-  value: 'Computer Science Enginerring'
+  value:"Computer Science Enginerring"
 },
 {key: 'Information Enginerring',
     text: 'Information Enginerring',
@@ -68,12 +68,11 @@ value: 'Eight Semester'
   
   ]
 
-class SellBook extends React.Component{
-   
-  render(){
+function SellBook({logout,username,handleChange,handleselect,savebook}) {
+  
   return (
     <div>
-      <div><MainNavBar> </MainNavBar>
+      <div><MainNavBar  logout={logout} username={username}> </MainNavBar>
         </div>
         <Divider horizontal>
       <Header as='h4'>
@@ -86,15 +85,17 @@ class SellBook extends React.Component{
           <Grid.Row>
           <Grid.Column width={8} >
         <Form className='attached fluid ' >
-        <Form.Field control={Select} required label='CHOOSE BRANCH' options={BranchOptions} placeholder=' Select Branch' />
+        <Form.Field control={Select} onChange={(e, { value }) => handleselect("branch",value)} required label='CHOOSE BRANCH' options={BranchOptions} placeholder=' Select Branch' />
         <br />
-          <Form.Field control={Select} required label='CHOOSE SEMESTER' options={SemesterOptions} placeholder='Select Semester' /> 
+          <Form.Field control={Select}  onChange={(e, { value }) => handleselect("semester",value)}  required label='CHOOSE SEMESTER' options={SemesterOptions} placeholder='Select Semester' /> 
           <br />
-          <Form.Input required label='BOOK NAME'  type='text' /> 
+          <Form.Input name="bookname" onChange={handleChange}  required label='BOOK NAME'  type='text' /> 
+          <br />
+          <Form.Input name="bookurl" onChange={handleChange}  required label='BOOK URL'  type='text' /> 
           <br />
           <Form.Group widths='equal'>
-      <Form.Input label='SELLING PRICE' required  type='number' />
-      <Form.Input label='MRP'  type='number' />
+      <Form.Input label='SELLING PRICE' required  type='number' name="sellingprice" onChange={handleChange}   />
+      <Form.Input label='MRP'  type='number' name="MRP" onChange={handleChange}  />
       </Form.Group>
       <br />
       <Form.Checkbox inline  label='I agree to the terms and conditions ' required />
@@ -128,7 +129,7 @@ class SellBook extends React.Component{
 
       
       <Grid.Column width={8} >
-        <Button size='big' fluid   primary>
+        <Button  onClick={savebook}   size='big' fluid   primary>
      Submit Details
 
     </Button>
@@ -147,5 +148,5 @@ class SellBook extends React.Component{
   );
   }
   
-  }
+  
   export default SellBook;

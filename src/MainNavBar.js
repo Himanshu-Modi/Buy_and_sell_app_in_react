@@ -3,8 +3,7 @@ import { Button, Icon,Dropdown, Popup } from 'semantic-ui-react';
 import { Navbar, Nav,Form,FormControl} from '../node_modules/react-bootstrap';
 import {  Link } from "react-router-dom";
 
-class MainNavBar extends React.Component{
-    render(){
+function MainNavBar({logout,username}){
         return (
    <div>
         <Navbar bg="dark" variant="dark" expand="lg" >
@@ -28,7 +27,7 @@ class MainNavBar extends React.Component{
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
       <Button variant="outline-success">Search</Button>
     </Form>
-    <Nav.Link href="" >
+    <Nav.Link >
         <Link to="/sellbook">
     <Button icon labelPosition='left' >
     
@@ -37,29 +36,30 @@ class MainNavBar extends React.Component{
     </Button>
     </Link>
     </Nav.Link>
-    <Nav.Link href="">
+    <Nav.Link >
    
 
   
  <Popup content='Add users to your feed' trigger={<Button icon='bell' / >} />
  </Nav.Link>
   
-   <Nav.Link href="">
+   <Nav.Link>
 
-    <Dropdown  text="User   ▼" icon='user'  labeled button className='icon' direction='left' >
+    <Dropdown  text={username}  icon='user'  labeled button className='icon' direction='left' >
     <Dropdown.Menu>
    
-      <Dropdown.Item > <Link to="/mybooks"> <Icon name="book" ></Icon>  My Books</Link> </Dropdown.Item>
-      <Dropdown.Item >  <Link to="/profile"> <Icon name="edit" ></Icon> Personel Info</Link> </Dropdown.Item>
+      <Dropdown.Item > <Link to="/mybooks"> <Icon name="book" ></Icon>  My Books </Link></Dropdown.Item>
+      <Dropdown.Item  > <Link to="/profile">  <Icon name="edit" ></Icon> Personel Info </Link> </Dropdown.Item>
       <Dropdown.Divider />
      
       
-      <Dropdown.Item > <Link to="/"><Icon name="log out" ></Icon>  Log out </Link></Dropdown.Item>
+      <Dropdown.Item onClick={logout} > <Icon name="log out" ></Icon>  Log out </Dropdown.Item>
      
     
     </Dropdown.Menu>
   </Dropdown> 
   </Nav.Link>
+  
   </Nav>
 
   </Navbar.Collapse>
@@ -67,6 +67,5 @@ class MainNavBar extends React.Component{
 </Navbar>
 </div>
         );
-    }
-}
+        }
 export default MainNavBar

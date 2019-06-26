@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import MainNavBar from './MainNavBar';
 import './MyBooks.css';
 
-const MyBooks = () => (
+function MyBooks({logout,username}){ 
+return  (
   <div className="MyBooksbg">
-  <MainNavBar></MainNavBar>
+  <MainNavBar logout={logout} username={username}></MainNavBar>
   <div >
  
 <div className="mainHeading">
@@ -65,5 +66,6 @@ const MyBooks = () => (
     
    
   )
+}
 
   export default MyBooks;
