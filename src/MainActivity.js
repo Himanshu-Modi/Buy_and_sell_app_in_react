@@ -42,7 +42,6 @@ return  (
 function ShowBooks(props){
   console.log("show Books");
   let  db=props.books;
-  console.log(db);
  
   return ( <Card.Group itemsPerRow={4}> 
     {db.map((item) =>(
@@ -57,17 +56,17 @@ function ShowBooks(props){
   
   
 
-function MainPage({logout,username,getseller,books,bookdescription,handleselect,bookfilter,uid}){
+function MainPage({logout,username,getseller,books,bookdescription,handleselect,bookfilter,getmybooks,filterbranch,filtersemester}){
  
  return (
     <div>
         <div>
-          <MainNavBar logout={logout} username={username}></MainNavBar>
+          <MainNavBar logout={logout} username={username} getmybooks={getmybooks}></MainNavBar>
         </div>
 
    
 <div className="FilterClass">
-<FormExampleSubcomponentControl handleselect={handleselect} bookfilter={bookfilter}></FormExampleSubcomponentControl>
+<FormExampleSubcomponentControl handleselect={handleselect} bookfilter={bookfilter} filterbranch={filterbranch} filtersemester={filtersemester} ></FormExampleSubcomponentControl>
   </div>
   
     <div> 

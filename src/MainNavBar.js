@@ -3,7 +3,7 @@ import { Button, Icon,Dropdown, Popup } from 'semantic-ui-react';
 import { Navbar, Nav,Form,FormControl} from '../node_modules/react-bootstrap';
 import {  Link } from "react-router-dom";
 
-function MainNavBar({logout,username}){
+function MainNavBar({logout,username,getmybooks}){
         return (
    <div>
         <Navbar bg="dark" variant="dark" expand="lg" >
@@ -48,7 +48,7 @@ function MainNavBar({logout,username}){
     <Dropdown  text={username}  icon='user'  labeled button className='icon' direction='left' >
     <Dropdown.Menu>
    
-      <Dropdown.Item > <Link to="/mybooks"> <Icon name="book" ></Icon>  My Books </Link></Dropdown.Item>
+      <Dropdown.Item onClick={getmybooks} >  <Icon name="book" ></Icon>  My Books </Dropdown.Item>
       <Dropdown.Item  > <Link to="/profile">  <Icon name="edit" ></Icon> Personel Info </Link> </Dropdown.Item>
       <Dropdown.Divider />
      

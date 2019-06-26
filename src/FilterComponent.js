@@ -6,8 +6,8 @@ function FormExampleSubcomponentControl(props) {
       <Form >
         <Form.Group>
        
-          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filterbranch",value)}  options={BranchOptions} placeholder='Select Branch' width={7} />
-          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filtersemester",value)}   options={SemesterOptions} placeholder='Select Semester' width={7}/>
+          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filterbranch",value)} value={props.filterbranch} options={BranchOptions} placeholder='Select Branch' width={7} />
+          <Form.Select fluid  onChange={(e, { value }) => props.handleselect("filtersemester",value)} value={props.filtersemester}  options={SemesterOptions} placeholder='Select Semester' width={7}/>
            <Form.Button color={"blue"} width={3} fluid onClick={props.bookfilter} >  <Icon name='search' fluid  />Search</Form.Button>
         </Form.Group>
     </Form>); 

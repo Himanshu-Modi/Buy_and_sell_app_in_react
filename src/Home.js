@@ -51,6 +51,7 @@ function Home({model1show,showlogin,model2show,showsignup,googleLogin,handleChan
       We'll never share your email with anyone else.
     </Form.Text>
   </Form.Group>
+  
 
   <Form.Group controlId="formBasicPassword">
     <Form.Label>Password</Form.Label>

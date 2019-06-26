@@ -8,10 +8,13 @@ import SellBook from './SellBook';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
+
 import Bookdescription from './bookdescription';
 import MyBooks from './MyBooks'
 import Profile from './profile'
 import axios from '../node_modules/axios';
+import EditBook from './edit';
+
 
 var firebaseConfig = {
   apiKey: "AIzaSyCOeBYQ32N2_qssk71Ez7eNEcYfc8YfQwc",
@@ -30,9 +33,10 @@ firebase.initializeApp(firebaseConfig);
 class App extends React.Component{
   constructor(props){
     super(props)
-     this.state= {model1show:false,model2show:false,name:"",email:"",password:"",phone:"",uid:"",bookname:"",branch:"",semester:"",sellingprice:0,MRP:0,bookurl:"",sellername:"",sellerphone:"",sellerid:"",filterbranch:"",filtersemester:""}
+     this.state= {model1show:false,model2show:false,name:"",email:"",password:"",phone:"",uid:"",bookname:"",branch:"",semester:"",sellingprice:null,MRP:null,bookurl:"",sellername:"",sellerphone:"",sellerid:"",filterbranch:null,filtersemester:null,bid:null}
      this.state.db = {
-     books:[],   
+     books:[],
+     mybooks:[]   
      }    
 
   }
@@ -226,13 +230,27 @@ getseller=(uid,sid)=>{
 }
 
 savebook=()=>{
+    console.log("simple wala");
   let obj={branch:this.state.branch,semester:this.state.semester,bookname:this.state.bookname,bookurl:this.state.bookurl,sellingprice:this.state.sellingprice,MRP:this.state.MRP,uid:this.state.uid};
 axios.post("http://localhost:8080/savebook",obj).then((res)=>{
-  this.books();
-  this.props.history.push("/books/all")
-})
+  obj=res.data
 
-}
+  let db=this.state.db;
+  let book1=db.books;
+  book1.push(obj);
+  db.books=book1
+  this.setState({
+    db:db,
+    branch:"",
+    semester:"",
+    bookname:"",
+    sellingprice:0,
+    MRP:0
+  })
+  this.props.history.push('/books/all');
+})
+  }
+
 
 
 updateuser=()=>{
@@ -305,6 +323,68 @@ books=()=>{
  
 }
 
+getmybooks=()=>{ 
+  axios.get('http://localhost:8080/mybooks/'+this.state.uid)
+  .then((res)=>{
+    
+  let db = this.state.db;
+  db.mybooks = res.data;
+  console.log(res.data);
+    this.setState({
+       db:db
+    })
+  })
+  this.props.history.push('/mybooks/'+this.state.uid);
+ 
+}
+
+
+editbook=(bid)=>{
+  let mybooks=this.state.db.mybooks;
+  var index=mybooks.findIndex(function(item,i){
+    return (item._id==bid)
+  })
+  let book=mybooks[index];
+  this.setState({
+    branch:book.branch,
+    semester:book.semester,
+    bookname:book.bookname,
+    sellingprice:book.sellingprice,
+    MRP:book.MRP,
+    bid:book._id
+  })
+
+  this.props.history.push('/edit');
+}
+
+deletebook=(bid)=>{
+  console.log("delete book call hua h");
+  axios.delete('http://localhost:8080/book/'+bid);
+  let db=this.state.db;
+  let mybooks1=db.mybooks
+  var index=mybooks1.findIndex(function(item,i){
+    return (item._id==bid)
+  })
+mybooks1.splice(index,1)
+db.mybooks=mybooks1
+
+let books1=db.books
+var index=books1.findIndex(function(item,i){
+  return (item._id==bid)
+})
+books1.splice(index,1)
+db.books=books1
+
+this.setState({
+  db:db
+})
+
+
+
+
+}
+
+
   componentDidMount(){
     this.checkuser();   
 
@@ -317,17 +397,16 @@ books=()=>{
     return (<div>
      
           <Route path="/" exact render={()=><Home model1show={this.state.model1show} showlogin={this.showlogin.bind(this)}   model2show={this.state.model2show} showsignup={this.showsignup.bind(this)} googleLogin={this.googleLogin}  handleChange={this.handleChange.bind(this)}  signup={this.signup.bind(this)} signin={this.signin.bind(this)} ></Home>} />
-          <Route path="/books/all" exact render={()=><MainPage logout ={this.logout}  uid={this.state.uid}  username={this.state.name} getseller={this.getseller}   books={this.state.db.books} bookdescription={this.bookdescription}  handleselect={this.handleselect.bind(this)} bookfilter={this.bookfilter} ></MainPage>} />
-          <Route path="/sellbook" exact render={()=><SellBook    logout ={this.logout} uid={this.state.uid}  username={this.state.name} handleChange={this.handleChange.bind(this)}  handleselect={this.handleselect.bind(this)} savebook={this.savebook} ></SellBook> }/>
-          <Route path="/profile"  exact render={()=><Profile   logout ={this.logout} uid={this.state.uid}  username={this.state.name} phone={this.state.phone} handleChange={this.handleChange.bind(this)}   handlephoneChange={this.handlephoneChange.bind(this)} updateuser={this.updateuser} ></Profile> } />
-          <Route path="/bookdescription/:id" exact render={(props)=><Bookdescription  {...props}  logout ={this.logout} uid={this.state.uid}  username={this.state.name}   books={this.state.db.books} sellername={this.state.sellername} sellerphone={this.state.sellerphone} ></Bookdescription> }/>
-          <Route path="/mybooks/:id" exact render={()=><MyBooks   logout ={this.logout} uid={this.state.uid}  username={this.state.name} ></MyBooks> }/>
+          <Route path="/books/all" exact render={()=><MainPage logout ={this.logout} getmybooks={this.getmybooks} username={this.state.name} getseller={this.getseller}   books={this.state.db.books} bookdescription={this.bookdescription}  handleselect={this.handleselect.bind(this)} bookfilter={this.bookfilter} filterbranch={this.state.filterbranch} filtersemester={this.state.filtersemester} ></MainPage>} />
+          <Route path="/sellbook" exact render={()=><SellBook  getmybooks={this.getmybooks}   logout ={this.logout} username={this.state.name} handleChange={this.handleChange.bind(this)}  handleselect={this.handleselect.bind(this)} savebook={this.savebook} ></SellBook> }/>
+          <Route path="/profile"  exact render={()=><Profile getmybooks={this.getmybooks}  logout ={this.logout}   username={this.state.name} phone={this.state.phone} handleChange={this.handleChange.bind(this)}   handlephoneChange={this.handlephoneChange.bind(this)} updateuser={this.updateuser} ></Profile> } />
+          <Route path="/bookdescription/:id" exact render={(props)=><Bookdescription  {...props} getmybooks={this.getmybooks} logout ={this.logout}  username={this.state.name}   books={this.state.db.books} sellername={this.state.sellername} sellerphone={this.state.sellerphone} ></Bookdescription> }/>
+          <Route path="/mybooks/:id" exact render={()=><MyBooks editbook={this.editbook} getmybooks={this.getmybooks} deletebook={this.deletebook}  logout ={this.logout} mybooks={this.state.db.mybooks} username={this.state.name} ></MyBooks> }/>
+          <Route path="/edit" exact render={()=><EditBook branch={this.state.branch} semester={this.state.semester} bookname={this.state.bookname} sellingprice={this.state.sellingprice} MRP={this.state.MRP}  getmybooks={this.getmybooks}   logout ={this.logout} username={this.state.name} handleChange={this.handleChange.bind(this)}  handleselect={this.handleselect.bind(this)} savebook={this.savebook} ></EditBook> }/>
        
        </div>
        );
     }
  
- 
-
 }
 export default withRouter(App);

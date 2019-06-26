@@ -68,11 +68,11 @@ value: 'Eight Semester'
   
   ]
 
-function SellBook({logout,username,handleChange,handleselect,savebook}) {
+function SellBook({logout,username,handleChange,handleselect,savebook,getmybooks}) {
   
   return (
     <div>
-      <div><MainNavBar  logout={logout} username={username}> </MainNavBar>
+      <div><MainNavBar  logout={logout} username={username} getmybooks={getmybooks}> </MainNavBar>
         </div>
         <Divider horizontal>
       <Header as='h4'>
@@ -85,11 +85,11 @@ function SellBook({logout,username,handleChange,handleselect,savebook}) {
           <Grid.Row>
           <Grid.Column width={8} >
         <Form className='attached fluid ' >
-        <Form.Field control={Select} onChange={(e, { value }) => handleselect("branch",value)} required label='CHOOSE BRANCH' options={BranchOptions} placeholder=' Select Branch' />
+        <Form.Field control={Select}   onChange={(e, { value }) => handleselect("branch",value)} required label='CHOOSE BRANCH' options={BranchOptions} placeholder=' Select Branch' />
         <br />
           <Form.Field control={Select}  onChange={(e, { value }) => handleselect("semester",value)}  required label='CHOOSE SEMESTER' options={SemesterOptions} placeholder='Select Semester' /> 
           <br />
-          <Form.Input name="bookname" onChange={handleChange}  required label='BOOK NAME'  type='text' /> 
+          <Form.Input name="bookname" onChange={handleChange} required label='BOOK NAME'  type='text' /> 
           <br />
           <Form.Input name="bookurl" onChange={handleChange}  required label='BOOK URL'  type='text' /> 
           <br />

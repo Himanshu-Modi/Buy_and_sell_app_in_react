@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Icon, Image, Button, Divider, Header, Grid } from 'semantic-ui-react'
 import MainNavBar from './MainNavBar';
 
-function Profile ({logout,username,phone,handleChange,handlephoneChange,updateuser}){
+function Profile ({logout,username,phone,handleChange,handlephoneChange,updateuser,getmybooks}){
         return (<div>
-            <MainNavBar  logout={logout} username={username}></MainNavBar>
+            <MainNavBar  logout={logout} username={username} getmybooks={getmybooks}></MainNavBar>
             <Divider horizontal>
                 <Header as='h4'>
                     <Icon name='user' />

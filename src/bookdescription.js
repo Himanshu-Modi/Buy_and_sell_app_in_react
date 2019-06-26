@@ -18,7 +18,7 @@ function Bookdescription(props){
 return (
   <div>
       
-      <MainNavBar username={props.username} logout={props.logout} ></MainNavBar>
+      <MainNavBar username={props.username} logout={props.logout} getmybooks={props.getmybooks} ></MainNavBar>
       <div></div>
       <Divider horizontal>
       <Header as='h1'>
