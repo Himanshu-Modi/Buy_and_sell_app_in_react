@@ -68,7 +68,7 @@ value: 'Eight Semester'
   
   ]
 
-function EditBook({branch,semester,bookname,sellingprice,MRP,logout,username,handleChange,handleselect,savebook,getmybooks}) {
+function EditBook({branch,semester,bookname,sellingprice,MRP,logout,username,handleChange,handleselect,fileUpload,getmybooks,saveeditbook,bookimage}) {
   
   return (
     <div>
@@ -91,8 +91,8 @@ function EditBook({branch,semester,bookname,sellingprice,MRP,logout,username,han
           <br />
           <Form.Input name="bookname" value={bookname} onChange={handleChange} required label='BOOK NAME'  type='text' /> 
           <br />
-          <Form.Input name="bookurl" onChange={handleChange}  required label='BOOK URL'  type='text' /> 
-          <br />
+  
+         
           <Form.Group widths='equal'>
       <Form.Input label='SELLING PRICE' value={sellingprice} required  type='number' name="sellingprice" onChange={handleChange}   />
       <Form.Input label='MRP' value={MRP} type='number' name="MRP" onChange={handleChange}  />
@@ -112,7 +112,8 @@ function EditBook({branch,semester,bookname,sellingprice,MRP,logout,username,han
    
     </Grid.Column>
     <Grid.Column width={5} centered >
-    <Image src="https://s4.scoopwhoop.com/anj/787440660.jpg" className="img1" rounded/>
+    <Image src={bookimage} className="img1" rounded/>
+    <input type="file" onChange={(e)=>{fileUpload(e)}}></input>
     <Button icon labelPosition='left' >
         <Icon name='upload' />
         Upload Image
@@ -129,8 +130,8 @@ function EditBook({branch,semester,bookname,sellingprice,MRP,logout,username,han
 
       
       <Grid.Column width={8} >
-        <Button  onClick={savebook}   size='big' fluid   primary>
-     Submit Details
+        <Button  onClick={saveeditbook}  size='big' fluid   primary>
+     Save Book Details
 
     </Button>
     </Grid.Column>

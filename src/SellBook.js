@@ -68,7 +68,7 @@ value: 'Eight Semester'
   
   ]
 
-function SellBook({logout,username,handleChange,handleselect,savebook,getmybooks}) {
+function SellBook({logout,username,handleChange,handleselect,savebook,getmybooks,fileUpload,bookimage}) {
   
   return (
     <div>
@@ -91,8 +91,7 @@ function SellBook({logout,username,handleChange,handleselect,savebook,getmybooks
           <br />
           <Form.Input name="bookname" onChange={handleChange} required label='BOOK NAME'  type='text' /> 
           <br />
-          <Form.Input name="bookurl" onChange={handleChange}  required label='BOOK URL'  type='text' /> 
-          <br />
+         
           <Form.Group widths='equal'>
       <Form.Input label='SELLING PRICE' required  type='number' name="sellingprice" onChange={handleChange}   />
       <Form.Input label='MRP'  type='number' name="MRP" onChange={handleChange}  />
@@ -112,11 +111,16 @@ function SellBook({logout,username,handleChange,handleselect,savebook,getmybooks
    
     </Grid.Column>
     <Grid.Column width={5} centered >
-    <Image src="https://s4.scoopwhoop.com/anj/787440660.jpg" className="img1" rounded/>
+
+    
+   
+    <Image src={bookimage} className="img1" rounded/>
+    <input type="file" onChange={(e)=>{fileUpload(e)}}></input>
     <Button icon labelPosition='left' >
         <Icon name='upload' />
         Upload Image
       </Button>
+    
       </Grid.Column>
       </Grid.Row>
       </Grid>

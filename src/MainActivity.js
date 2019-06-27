@@ -40,7 +40,6 @@ return  (
 }
 
 function ShowBooks(props){
-  console.log("show Books");
   let  db=props.books;
  
   return ( <Card.Group itemsPerRow={4}> 
